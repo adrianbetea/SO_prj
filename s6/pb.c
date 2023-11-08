@@ -25,6 +25,76 @@ const char *FileSuffix(const char path[]) {
     return result;
 }
 
+void scriere_fisier(int fd_input, int fd_output, struct stat fileStat) {
+  char out[1024];
+
+ //folosim file stat pentru a gasi informatii despre fisier
+  if(fstat(fd_input, &fileStat) == -1) {
+    perror("nu s-a putut citi dimensiunea fisierului!\n");
+    exit(-1);
+  }
+
+  // DIMENSIUNEA FISIERULUI
+  sprintf(out, "size: %ld\n", fileStat.st_size);
+  write(fd_output, out, strlen(out));
+
+  // USER ID
+  sprintf(out, "user_id: %d\n", fileStat.st_uid);
+  write(fd_output, out, strlen(out));
+
+  // NUMARUL DE LEGATURI
+  sprintf(out, "nr legaturi: %ld\n", fileStat.st_nlink);
+  write(fd_output, out, strlen(out));
+
+  // DATA ULTIMEI MODIFICARI
+  sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
+  write(fd_output, out, strlen(out));
+
+  // DREPTURI DE ACCES
+
+  // drepturi pentru user
+  sprintf(out, "Drepturi de acces user:");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
+  write(fd_output, out, strlen(out));
+
+
+  // drepturi pentru grup
+  sprintf(out, "Drepturi de acces grup: ");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
+  write(fd_output, out, strlen(out));
+
+
+  // drepturi pentru altii
+  sprintf(out, "Drepturi de acces altii: ");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
+  write(fd_output, out, strlen(out));
+
+  sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n" : "-\n");
+  write(fd_output, out, strlen(out));
+
+}
+
 int main(int argc, char** argv) {
 
   if(argc != 2) {
@@ -88,65 +158,7 @@ int main(int argc, char** argv) {
 
   struct stat fileStat;
 
-  if(fstat(fd_input, &fileStat) == -1) {
-    perror("nu s-a putut citi dimensiunea fisierului!\n");
-    exit(-1);
-  }
-
-  //folosim file stat pentru a gasi informatii despre fisier
-  sprintf(out, "size: %ld\n", fileStat.st_size);
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, "user_id: %d\n", fileStat.st_uid);
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, "nr legaturi: %ld\n", fileStat.st_nlink);
-  write(fd_output, out, strlen(out));
-
-  // DATA ULTIMEI MODIFICARI
-
-  sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
-  write(fd_output, out, strlen(out));
-
-  // DREPTURI DE ACCES
-  
-  sprintf(out, "Drepturi de acces user:");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
-  write(fd_output, out, strlen(out));
-
-  sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, "Drepturi de acces grup: ");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, "Drepturi de acces altii: ");
-  write(fd_output, out, strlen(out));
-  
-  
-  sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
-  write(fd_output, out, strlen(out));
-  
-  sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n" : "-\n");
-  write(fd_output, out, strlen(out));
-  
+  scriere_fisier(fd_input, fd_output, fileStat);
 
   if(close(fd_input) == -1) {
     printf("fisierul %s nu s-a putut inchide\n", argv[1]);
