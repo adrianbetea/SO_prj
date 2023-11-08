@@ -148,7 +148,20 @@ int main(int argc, char** argv) {
   write(fd_output, out, strlen(out));
   
 
+  if(close(fd_input) == -1) {
+    printf("fisierul %s nu s-a putut inchide\n", argv[1]);
+  }
+  else {
+    printf("fisierul %s s-a inchis cu succes\n", argv[1]);
+  }
+
   
+  if(close(fd_output) == -1) {
+    printf("fisierul %s nu s-a putut inchide\n", fout);
+  }
+  else {    
+    printf("fisierul %s s-a inchis cu succes!!!!\n", fout);
+  }
   
   return 0;
 }
