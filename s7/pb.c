@@ -79,11 +79,13 @@ int main(int argc, char** argv) {
   // parcurgem tot directorul folosind readdir
   while((entry = readdir(dir)) != NULL) {
 
+    // folosim lstat pentru a verifica si fisierele de tip SYMBOLIC LINK
     if( (lstat(entry->d_name, &entryStat)) == -1) {
         perror("eroare");
         exit(-1);
     }
 
+    // switch case in functie de tipul fisierului
     switch(entry->d_type) {
       case IS_REG_FILE:
       {
@@ -99,13 +101,22 @@ int main(int argc, char** argv) {
         if(strcmp(FileSuffix(entry->d_name), ".bmp") == 0) {
           // scriem in fisierul statistica.txt
           if(write_bmp(fd_input, fd_output, entryStat, entry->d_name) == 1) {
-            printf("detaliile fisierului BMP %s au fost scrise in %s!\n\n", entry->d_name, fout);
-
+            printf("detaliile fisierului BMP %s au fost scrise in %s!\n", entry->d_name, fout);
+            if(close(fd_input) == -1) {
+                perror("fisierul nu s-a putut inchide!");
+            } else {
+              printf("fisierul %s s-a inchis cu succes!\n\n", entry->d_name);
+            }
           }
         } else {
           // functie pt fisier normal
           if(write_file(fd_input, fd_output, entryStat, entry->d_name) == 1) {
-            printf("detaliile fisierului %s au fost scrise in %s!\n\n", entry->d_name, fout);
+            printf("detaliile fisierului %s au fost scrise in %s!\n", entry->d_name, fout);
+            if(close(fd_input) == -1) {
+                perror("fisierul nu s-a putut inchide!");
+            }else {
+              printf("fisierul %s s-a inchis cu succes!\n\n", entry->d_name);
+            }
           }
         }
           break;
@@ -135,6 +146,12 @@ int main(int argc, char** argv) {
         if(write_dir(fd_output, entryStat, entry->d_name) == 1) {
           printf("detaliile directorului %s au fost scrise in %s!\n", entry->d_name, fout);
         }
+        break;
+      }
+
+      default:
+      {
+        printf("acest tip de fisier nu e recunoscut\n");
         break;
       }
 
