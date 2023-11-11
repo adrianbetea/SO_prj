@@ -1,0 +1,33 @@
+nume fisier: imagine.bmp
+width: 1920
+height: 1280
+size: 7372938
+user_id: 1000
+nr legaturi: 1
+Last modified time: Mon Nov  6 08:28:45 2023
+Drepturi de acces user:RW-
+Drepturi de acces grup: RW-
+Drepturi de acces altii: R--
+
+nume fisier: text.txt
+size: 27
+user_id: 1000
+nr legaturi: 1
+Last modified time: Wed Nov  8 22:39:40 2023
+Drepturi de acces user:RW-
+Drepturi de acces grup: RW-
+Drepturi de acces altii: R--
+
+nume legatura: symlink
+dimensiune legatura: 8
+dimensiune fisier target: 4096
+Drepturi de acces user:RWX
+Drepturi de acces grup: RWX
+Drepturi de acces altii: RWX
+
+nume director: text_dir
+user_id: 1000
+Drepturi de acces user: RWX
+Drepturi de acces grup: RWX
+Drepturi de acces altii: R-X
+
