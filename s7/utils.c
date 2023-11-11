@@ -1,3 +1,49 @@
+void write_permissions(int fd_output, struct stat fileStat) {
+    char out[1024];
+    // DREPTURI DE ACCES
+
+    // drepturi pentru user
+    sprintf(out, "Drepturi de acces user:");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
+    write(fd_output, out, strlen(out));
+
+
+    // drepturi pentru grup
+    sprintf(out, "Drepturi de acces grup: ");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
+    write(fd_output, out, strlen(out));
+
+
+    // drepturi pentru altii
+    sprintf(out, "Drepturi de acces altii: ");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
+    write(fd_output, out, strlen(out));
+
+    sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n\n" : "-\n\n");
+    write(fd_output, out, strlen(out));
+
+}
 
 int write_bmp(int fd_input, int fd_output, struct stat fileStat, char* nume) {
     char unused_buffer[1024];
@@ -39,48 +85,8 @@ int write_bmp(int fd_input, int fd_output, struct stat fileStat, char* nume) {
     sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
     write(fd_output, out, strlen(out));
 
-    // DREPTURI DE ACCES
 
-    // drepturi pentru user
-    sprintf(out, "Drepturi de acces user:");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru grup
-    sprintf(out, "Drepturi de acces grup: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru altii
-    sprintf(out, "Drepturi de acces altii: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n\n" : "-\n\n");
-    write(fd_output, out, strlen(out));
+    write_permissions(fd_output, fileStat);
 
     return 1;
 }
@@ -113,48 +119,7 @@ int write_file(int fd_input, int fd_output, struct stat fileStat, char* nume) {
     sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
     write(fd_output, out, strlen(out));
 
-    // DREPTURI DE ACCES
-
-    // drepturi pentru user
-    sprintf(out, "Drepturi de acces user:");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru grup
-    sprintf(out, "Drepturi de acces grup: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru altii
-    sprintf(out, "Drepturi de acces altii: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n\n" : "-\n\n");
-    write(fd_output, out, strlen(out));
+    write_permissions(fd_output, fileStat);
 
     return 1;
 }
@@ -174,48 +139,7 @@ int write_symbolic_link(int fd_output, struct stat entryStat, struct stat target
     sprintf(out, "dimensiune fisier target: %ld\n", targetStat.st_size);
     write(fd_output, out, strlen(out));
 
-    // DREPTURI DE ACCES
-
-    // drepturi pentru user
-    sprintf(out, "Drepturi de acces user:");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IRUSR) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IWUSR) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru grup
-    sprintf(out, "Drepturi de acces grup: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IRGRP) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IWGRP) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru altii
-    sprintf(out, "Drepturi de acces altii: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IROTH) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IWOTH) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (entryStat.st_mode & S_IXOTH) ? "X\n\n" : "-\n\n");
-    write(fd_output, out, strlen(out));
+    write_permissions(fd_output, entryStat);
 
     return 1;
 
@@ -232,48 +156,7 @@ int write_dir(int fd_output, struct stat dirStat, char *nume) {
     sprintf(out, "user_id: %d\n", dirStat.st_uid);
     write(fd_output, out, strlen(out));
 
-    // DREPTURI DE ACCES
-
-    // drepturi pentru user
-    sprintf(out, "Drepturi de acces user: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IRUSR) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IWUSR) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru grup
-    sprintf(out, "Drepturi de acces grup: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IRGRP) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IWGRP) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
-
-
-    // drepturi pentru altii
-    sprintf(out, "Drepturi de acces altii: ");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IROTH) ? "R" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IWOTH) ? "W" : "-");
-    write(fd_output, out, strlen(out));
-
-    sprintf(out, (dirStat.st_mode & S_IXOTH) ? "X\n\n" : "-\n\n");
-    write(fd_output, out, strlen(out));
+    write_permissions(fd_output, dirStat);
 
 
     return 1;

@@ -3,6 +3,7 @@
 
 void change_dir(const char* dir);
 
+void write_permissions(int fd_output, struct stat fileStat);
 int write_bmp(int fd_input, int fd_output, struct stat entryStat, char* nume);
 int write_file(int fd_input, int fd_output, struct stat entryStat, char* nume);
 
