@@ -65,8 +65,8 @@ int write_bmp(int fd_input, char* outputFileName, struct stat fileStat, char* nu
 }
 
 void convert_bmp(struct dirent *entryArray) {
-    char unused_buffer[54];
-    char out[1024];
+    char unused_buffer_1[18], unused_buffer_2[28];
+    int width, height;
     // ne aflam in directorul de input, nu schimbam direcotrul
 
     // deschidem fisierul
@@ -77,37 +77,31 @@ void convert_bmp(struct dirent *entryArray) {
         exit(-1);
     }
 
-    // unsigned char are un singur byte
-    unsigned char red, green, blue;
+    
 
     // citim urmatorii 54 de bytes din fisierul bmp
     // ca sa ajungem in zona culorilor 
-    read(fd_input, unused_buffer, 54);
+    read(fd_input, unused_buffer_1, 18);
+    read(fd_input, &width, 4);
+    read(fd_input, &height, 4);
+    read(fd_input, unused_buffer_2, 28);
+
     
 
-    read(fd_input, &red, 1);
-    read(fd_input, &green, 1);
-    read(fd_input, &blue, 1);
+    // unsigned char are un singur byte
+    unsigned char px[3];
+    long int pixelCount = width * height;
 
-    unsigned char gray = 0.299 * red + 0.587 * green + 0.114 * blue;  
+    for(long int i = 0; i < pixelCount; i++) {
+        read(fd_input, px, 3);
 
-    // scriem datele pe care nu le modificam
-    sprintf(out, "%s" , unused_buffer);
-    write(fd_input, out, strlen(out));
+        unsigned char gray = 0.299 * px[0] + 0.587 * px[1] + 0.114 * px[2]; 
 
-    // suprascriem in red valoarea grey obtinuta
-    sprintf(out, "%d", gray);
-    write(fd_input, out, strlen(out));
+        memset(px, gray, sizeof(px));
+        
+        write(fd_input, px, 3);
 
-    // suprascriem in green valoarea grey obtinuta
-    sprintf(out, "%d", gray);
-    write(fd_input, out, strlen(out));
-
-    // suprascriem in blue valoarea grey obtinuta
-    sprintf(out, "%d", gray);
-    write(fd_input, out, strlen(out));
-
-    printf("red=%d\ngreen=%d\nblue=%d\ngray=%d\n", red, green, blue, gray);
+    }
 
 }
 

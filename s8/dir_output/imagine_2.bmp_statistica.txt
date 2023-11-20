@@ -1,0 +1,11 @@
+nume fisier: imagine_2.bmp
+width: 640
+height: 426
+size: 818058
+user_id: 1000
+nr legaturi: 1
+Last modified time: Mon Nov 20 08:01:26 2023
+Drepturi de acces user:RW-
+Drepturi de acces grup: RW-
+Drepturi de acces altii: R--
+
