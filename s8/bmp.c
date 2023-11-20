@@ -99,7 +99,9 @@ void convert_bmp(struct dirent *entryArray) {
 
         memset(px, gray, sizeof(px));
         
-        write(fd_input, px, 3);
+        write(fd_input, &gray, 1);
+        write(fd_input, &gray, 1);
+        write(fd_input, &gray, 1);
 
     }
 
