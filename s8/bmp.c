@@ -65,7 +65,7 @@ int write_bmp(int fd_input, char* outputFileName, struct stat fileStat, char* nu
 }
 
 void convert_bmp(struct dirent *entryArray) {
-    char unused_buffer_1[18], unused_buffer_2[28];
+    char unused_buffer_1[20], unused_buffer_2[30];
     int width, height;
     // ne aflam in directorul de input, nu schimbam direcotrul
 
@@ -95,13 +95,10 @@ void convert_bmp(struct dirent *entryArray) {
     for(long int i = 0; i < pixelCount; i++) {
         read(fd_input, px, 3);
 
-        unsigned char gray = 0.299 * px[0] + 0.587 * px[1] + 0.114 * px[2]; 
-
+        unsigned char gray = 0.299 * px[2] + 0.587 * px[1] + 0.114 * px[0]; 
         memset(px, gray, sizeof(px));
         
-        write(fd_input, &gray, 1);
-        write(fd_input, &gray, 1);
-        write(fd_input, &gray, 1);
+        write(fd_input, px, 3);
 
     }
 
