@@ -1,0 +1,9 @@
+nume fisier: text2.txt
+size: 29
+user_id: 1000
+nr legaturi: 1
+Last modified time: Mon Nov 27 21:05:26 2023
+Drepturi de acces user:RW-
+Drepturi de acces grup: RW-
+Drepturi de acces altii: R--
+

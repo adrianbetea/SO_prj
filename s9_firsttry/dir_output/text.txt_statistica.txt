@@ -1,9 +1,0 @@
-nume fisier: text.txt
-size: 26
-user_id: 1000
-nr legaturi: 1
-Last modified time: Fri Nov 24 14:44:42 2023
-Drepturi de acces user:RW-
-Drepturi de acces grup: RW-
-Drepturi de acces altii: R--
-

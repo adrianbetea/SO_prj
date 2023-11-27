@@ -35,8 +35,7 @@ int main(int argc, char** argv) {
 
     int pids[MAX_P]; // maxim 1000 de procese
     int pid_second; // pentru procesul de verificare propozitii corecte.
-    int wpid;
-    int status = 0; // exit(0) 
+
     
     
     DIR *input_dir;
@@ -71,7 +70,6 @@ int main(int argc, char** argv) {
         exit(-1);
     }
     // salvam caracterul dat ca argument intr-o variabila
-    char caracter_alfan = argv[3][0];
 
     change_dir(argv[1]);
 
@@ -92,6 +90,8 @@ int main(int argc, char** argv) {
     int pfd2[2]; // folosit pentru a salva capetele pipe-ului dintre procesul copil2 si parinte
     // parcurgem toate intrarile
     // cream un proces nou pentru fiecare intrare
+    
+
     for(i = 0; i < n; i++) {
         //cream pipe-ul cu ajutorul caruia facem legatura dintre procesul curent si procesul de propozitii corecte
         if(pipe(pfd1)<0) {
@@ -99,6 +99,10 @@ int main(int argc, char** argv) {
             exit(1);
         }
 
+        if( pipe(pfd2) < 0) {
+            perror("eroare la crearea pipe-ului\n");
+            exit(-1);
+        }
 
         if((pids[i] = fork()) < 0) {
             perror("Eroare la crearea procesului");
@@ -134,8 +138,9 @@ int main(int argc, char** argv) {
                         
                     } else {
 
-                        close(pfd1[0]);// close reading end of the pipe
-
+                        close(pfd1[0]);// inchide capatul de citire al pipe-ului
+                        close(pfd2[1]);
+                        close(pfd2[0]);
                         // functie pt fisier normal
                         nr_scrieri = file_process(fd_input, entryArray[i], entryStat, argv[1], argv[2]);
 
@@ -151,9 +156,10 @@ int main(int argc, char** argv) {
                         //salvam continutul fisierului in buffer
                         get_content(fd_input, entryStat, argv[1], argv[2], buffer);
                         //scrie bufferul in pipe si dupa inchidem scrierea
+
                         write(pfd1[1], buffer, strlen(buffer)+1);
-                        dup2(pfd1[1], 1); // redirecteaza iesirea standard spre pipe
-                        close(pfd1[1]);
+
+                        close(pfd1[1]); // inchid capatul de scriere
                     }
                     break;
                 }
@@ -187,20 +193,10 @@ int main(int argc, char** argv) {
 
         }
 
-        int status;
-        if ( waitpid(pids[i], &status, 0) == -1 ) {
-            perror("waitpid failed");
-            return EXIT_FAILURE;
-        }
-        if ( WIFEXITED(status) ) {
-            const int exit_status = WEXITSTATUS(status);
-            nr_scrieri_array[i] = exit_status;
-        }
 
         // ne folosim de exit status pentru a afla numarul de scrieri din fisierul statistica.txt
         
-        // mesaj incheiere proces
-        printf("!!!S-a incheiat procesul cu PID-ul %d si codul %d!!!\n\n", pids[i], nr_scrieri_array[i]);
+        
 
         //daca e fisier normal si nu are extensia .bmp
         if(entryArray[i]->d_type == IS_REG_FILE) {
@@ -212,50 +208,60 @@ int main(int argc, char** argv) {
 
                 if(pid_second == 0) {
 
-                    close(pfd1[1]); // inchide scrirea din pipe
-                    char file_content[1024];
+                    close(pfd1[1]); // inchide capatul de scriere din primul pipe
+                    close(pfd2[0]); // inchide capatul de citire din al doilea pipe
+
+                    dup2(pfd1[0], 0); // redirectam stdin din primul pipe
+                    dup2(pfd2[1], 1); // redirectam stdout din al doilea pipe
                     
                     // salveaza in file_content ce avem in pipe
-                    
-                    
-                    //avem in file_content continutul fisierului normal
-                    char shell_path[100]="/home/adrian/Desktop/SO/Proiect_SO/s9/bash.sh";
-                    strcat(shell_path, " ");
-                    strcat(shell_path, argv[3]);
-
-                    //dup2(pfd1[0], 0); // redirecteaza intrarea standard spre pipe
-                    FILE *stream = fdopen(pfd1[0], "r");
-
-                    fscanf(stream, "%s", file_content);
-
                     execlp("/home/adrian/Desktop/SO/Proiect_SO/s9/bash.sh", "/home/adrian/Desktop/SO/Proiect_SO/s9/bash.sh", argv[3], NULL);
 
-                    close(pfd1[0]);
+                    perror("Eroare la fisierul bash");
 
-                    //cream pipe-ul cu ajutorul caruia facem legatura dintre procesul curent si procesul parinte
-                    if(pipe(pfd2)<0) {
-                        perror("Eroare la crearea pipe-ului\n");
-                        exit(1);
-                    }
-
-                    //close(pfd2[0]);// close reading end of the pipe
-
-                    //scrie in pipe 
-                    //write(pfd2[1], file_content, strlen(file_content)+1);
-                    //close(pfd2[1]); // close writing end of the pipe
-                    
                     exit(0);
                 }
-            } 
-        }
+                //scoatem din pipe numarul de propozitii corecte care contin caracterul argv[3]
+                close(pfd2[1]);// inchide capatul de scriere din al doilea pipe
+                close(pfd1[0]);// inchide capatul de citire din primul pipe
+                close(pfd1[1]);// inchide capatul de scriere din primul pipe 
+                
 
+                // citeste intrarea din pipe
+                char out[1024];
+                read(pfd2[0], out, 1024);
+                int count;                      
+                sscanf( out, "%d", &count);
+                //printf("count = %d", count);
+                printf("\nAu fost identificate in total %d propozitii corecte care contin caracterul %s\n", count, argv[3]);
+
+                close(pfd2[0]);
+
+            }             
+        }
     }
-    while( (wpid = wait(&status)) > 0); // asteapta toate procesele sa se termine
+
+    
+
+    for(int j = 0; j < n; j++) {
+        int status;
+        if ( waitpid(pids[j], &status, 0) == -1 ) {
+            perror("waitpid failed");
+            return EXIT_FAILURE;
+        }
+        if ( WIFEXITED(status) ) {
+            const int exit_status = WEXITSTATUS(status);
+            // mesaj incheiere proces
+            printf("!!!S-a incheiat procesul cu PID-ul %d si codul %d!!!\n", pids[j], WEXITSTATUS(status));
+            nr_scrieri_array[j] = exit_status;
+        }
+    }
 
     
     for(i = 0; i < n; i++) {
         printf("proces %d: Numar scrieri fisier %s = %d\n", pids[i], entryArray[i]->d_name, nr_scrieri_array[i]);
     }
+
 
 
     if(closedir(input_dir) == -1) {

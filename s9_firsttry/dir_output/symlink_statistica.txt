@@ -1,7 +1,0 @@
-nume legatura: symlink
-dimensiune legatura: 8
-dimensiune fisier target: 4096
-Drepturi de acces user:RWX
-Drepturi de acces grup: RWX
-Drepturi de acces altii: RWX
-
