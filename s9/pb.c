@@ -88,10 +88,11 @@ int main(int argc, char** argv) {
 
     int pfd1[2]; // folosit pentru a salva capetele pipe-ului dintre procesele copii
     int pfd2[2]; // folosit pentru a salva capetele pipe-ului dintre procesul copil2 si parinte
+
+    int total_propozitii = 0;
+    
     // parcurgem toate intrarile
     // cream un proces nou pentru fiecare intrare
-    
-
     for(i = 0; i < n; i++) {
         //cream pipe-ul cu ajutorul caruia facem legatura dintre procesul curent si procesul de propozitii corecte
         if(pipe(pfd1)<0) {
@@ -233,7 +234,8 @@ int main(int argc, char** argv) {
                 int count;                      
                 sscanf( out, "%d", &count);
                 //printf("count = %d", count);
-                printf("\nAu fost identificate in total %d propozitii corecte care contin caracterul %s\n", count, argv[3]);
+                printf("\nPentru intrarea %s au fost identificate in total %d propozitii corecte care contin caracterul %s\n", entryArray[i]->d_name,count, argv[3]);
+                total_propozitii += count;
 
                 close(pfd2[0]);
 
@@ -262,7 +264,7 @@ int main(int argc, char** argv) {
         printf("proces %d: Numar scrieri fisier %s = %d\n", pids[i], entryArray[i]->d_name, nr_scrieri_array[i]);
     }
 
-
+    printf("\nAu fost identificare in total %d propozitii corecte care contin caracterul %s\n", total_propozitii, argv[3]);
 
     if(closedir(input_dir) == -1) {
         perror("Directorul nu s-a putut inchide\n");
