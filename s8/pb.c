@@ -34,8 +34,6 @@ int main(int argc, char** argv) {
     }
 
     int pids[MAX_P]; // maxim 1000 de procese
-    int wpid;
-    int status = 0; // exit(0) 
     
     
 
@@ -154,24 +152,26 @@ int main(int argc, char** argv) {
             exit(nr_scrieri);    
         }
 
+        
+
+        // ne folosim de exit status pentru a afla numarul de scrieri din fisierul statistica.txt
+        
+        
+    }
+    
+    for(int j = 0; j < n; j++) {
         int status;
-        if ( waitpid(pids[i], &status, 0) == -1 ) {
+        if ( waitpid(pids[j], &status, 0) == -1 ) {
             perror("waitpid failed");
             return EXIT_FAILURE;
         }
         if ( WIFEXITED(status) ) {
             const int exit_status = WEXITSTATUS(status);
-            nr_scrieri_array[i] = exit_status;
+            nr_scrieri_array[j] = exit_status;
         }
 
-        // ne folosim de exit status pentru a afla numarul de scrieri din fisierul statistica.txt
-        
-
-        // mesaj incheiere proces
-        printf("!!!S-a incheiat procesul cu PID-ul %d si codul %d!!!\n\n", pids[i], nr_scrieri_array[i]);
         
     }
-    while( (wpid = wait(&status)) > 0); // asteapta toate procesele sa se termine
 
     
     for(i = 0; i < n; i++) {

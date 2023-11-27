@@ -1,4 +1,0 @@
-if [ "$#" -ne 2 ]
-then echo "eroare"
-     exit 1
-fi

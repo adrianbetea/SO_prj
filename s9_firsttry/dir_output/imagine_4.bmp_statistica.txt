@@ -1,0 +1,11 @@
+nume fisier: imagine_4.bmp
+width: 762
+height: 1309
+size: 5984802
+user_id: 1000
+nr legaturi: 1
+Last modified time: Fri Nov 24 16:06:19 2023
+Drepturi de acces user:RW-
+Drepturi de acces grup: RW-
+Drepturi de acces altii: R--
+

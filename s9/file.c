@@ -72,3 +72,14 @@ int file_process(int fd_input, struct dirent *entryArray, struct stat entryStat,
     } 
     return nr_scrieri;
 }
+
+int get_content(int fd_input, struct stat entryArray, char *inp_dir, char*out_dir, char *buffer) {
+    char temp_buffer[1024];
+
+    read(fd_input, temp_buffer, sizeof(temp_buffer));
+    // salvam continutul fisierului in buffer
+    strcpy(buffer, temp_buffer);
+
+    return 0;
+
+}

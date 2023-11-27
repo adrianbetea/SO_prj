@@ -8,6 +8,7 @@ fi
 count=0
 
 # citeste de la stdin pana la EOF (Ctrl+D)
+input=""
 while read line
 do
     echo $line | grep -E '^[A-Z][A-Za-z?!,\. ]*' | grep -v ', si' | grep -v ',si' | grep -E '.*(\?|\!|\.)$'
