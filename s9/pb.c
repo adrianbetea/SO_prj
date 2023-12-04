@@ -138,10 +138,13 @@ int main(int argc, char** argv) {
 
                         
                     } else {
-
-                        close(pfd1[0]);// inchide capatul de citire al pipe-ului
-                        close(pfd2[1]);
-                        close(pfd2[0]);
+                        // close(pfd1[0]) inchide capatul de citire al pipe-ului
+                        if(close(pfd1[0]) == -1 || close(pfd2[1]) == -1 || close(pfd2[0]) == -1) {
+                            perror("eroare la inchiderea capetelor de scriere/citire din pipe");
+                            exit(-1);
+                        }
+                        
+                        
                         // functie pt fisier normal
                         nr_scrieri = file_process(fd_input, entryArray[i], entryStat, argv[1], argv[2]);
 
@@ -208,9 +211,12 @@ int main(int argc, char** argv) {
                 }
 
                 if(pid_second == 0) {
-
-                    close(pfd1[1]); // inchide capatul de scriere din primul pipe
-                    close(pfd2[0]); // inchide capatul de citire din al doilea pipe
+                    // close(pfd1[1]);  inchide capatul de scriere din primul pipe
+                    // close(pfd2[0]); inchide capatul de citire din al doilea pipe
+                    if(close(pfd1[1]) == -1 || close(pfd2[0]) == -1) {
+                       perror("eroare la inchiderea capetelor de scriere/citire din pipe");
+                       exit(-1); 
+                    } 
 
                     dup2(pfd1[0], 0); // redirectam stdin din primul pipe
                     dup2(pfd2[1], 1); // redirectam stdout din al doilea pipe
@@ -223,9 +229,14 @@ int main(int argc, char** argv) {
                     exit(0);
                 }
                 //scoatem din pipe numarul de propozitii corecte care contin caracterul argv[3]
-                close(pfd2[1]);// inchide capatul de scriere din al doilea pipe
-                close(pfd1[0]);// inchide capatul de citire din primul pipe
-                close(pfd1[1]);// inchide capatul de scriere din primul pipe 
+                //close(pfd2[1]);// inchide capatul de scriere din al doilea pipe
+                //close(pfd1[0]);// inchide capatul de citire din primul pipe
+                //close(pfd1[1]);// inchide capatul de scriere din primul pipe 
+
+                if(close(pfd2[1]) == -1 || close(pfd1[0]) == -1 || close(pfd1[1]) == -1) {
+                    perror("eroare la inchiderea capetelor de scriere/citire din pipe");
+                    exit(-1); 
+                }
                 
 
                 // citeste intrarea din pipe
@@ -237,7 +248,10 @@ int main(int argc, char** argv) {
                 printf("\nPentru intrarea %s au fost identificate in total %d propozitii corecte care contin caracterul %s\n", entryArray[i]->d_name,count, argv[3]);
                 total_propozitii += count;
 
-                close(pfd2[0]);
+                if(close(pfd2[0]) == -1) {
+                    perror("eroare la inchiderea capetelor de scriere/citire din pipe");
+                    exit(-1); 
+                }
 
             }             
         }
