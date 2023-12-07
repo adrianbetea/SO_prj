@@ -35,7 +35,7 @@ const char *FileSuffix(const char path[]) {
 int main(int argc, char** argv) {
 
   if(argc != 2) {
-    perror("usage ./program <director_intrare>");
+    printf("usage ./program <director_intrare>\n");
     exit(-1);
   }
 
@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
   int fd_input, fd_output;
 
   // deschidem directorul dat ca parametru
+  // apel sistem pentru deschdere director
   if((dir=opendir(argv[1])) == NULL) {
     perror("folderul nu s-a putut deschide!");
     exit(-1);
@@ -74,6 +75,7 @@ int main(int argc, char** argv) {
     printf("fisierul %s s-a deschis cu succes!\n", fout);
   }
 
+  // ne mutam in directorul de intrare
    change_dir(argv[1]);
 
   // parcurgem tot directorul folosind readdir
@@ -102,8 +104,10 @@ int main(int argc, char** argv) {
           // scriem in fisierul statistica.txt
           if(write_bmp(fd_input, fd_output, entryStat, entry->d_name) == 1) {
             printf("detaliile fisierului BMP %s au fost scrise in %s!\n", entry->d_name, fout);
+            // apel sistem pentru inchiderea fisierului
             if(close(fd_input) == -1) {
                 perror("fisierul nu s-a putut inchide!");
+                exit(-1);
             } else {
               printf("fisierul %s s-a inchis cu succes!\n\n", entry->d_name);
             }
@@ -114,6 +118,7 @@ int main(int argc, char** argv) {
             printf("detaliile fisierului %s au fost scrise in %s!\n", entry->d_name, fout);
             if(close(fd_input) == -1) {
                 perror("fisierul nu s-a putut inchide!");
+                exit(-1);
             }else {
               printf("fisierul %s s-a inchis cu succes!\n\n", entry->d_name);
             }
@@ -158,7 +163,7 @@ int main(int argc, char** argv) {
     }
   }
 
-
+  // apel sistem pentru inchidere director
   if(closedir(dir) == -1) {
     perror("Directorul nu s-a putut inchide\n");
     exit(-1);
