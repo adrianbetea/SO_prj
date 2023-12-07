@@ -9,17 +9,26 @@ int write_symbolic_link(char* outputFileName, struct stat entryStat, struct stat
 
     // nume legatura
     sprintf(out, "nume legatura: %s\n", nume);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // dimensiunea legaturii
     sprintf(out, "dimensiune legatura: %ld\n", entryStat.st_size);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // dimensiunea fisierului target
     sprintf(out, "dimensiune fisier target: %ld\n", targetStat.st_size);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // functie pentru scrierea permisiunilor

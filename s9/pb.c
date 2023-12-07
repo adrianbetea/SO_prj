@@ -29,7 +29,7 @@ int nr_scrieri_array[MAX_P];
 int main(int argc, char** argv) {
 
     if(argc != 4) {
-        perror("usage ./program <director_intrare> <director_iesire>");
+        printf("usage ./program <director_intrare> <director_iesire>\n");
         exit(-1);
     }
 
@@ -218,8 +218,16 @@ int main(int argc, char** argv) {
                        exit(-1); 
                     } 
 
-                    dup2(pfd1[0], 0); // redirectam stdin din primul pipe
-                    dup2(pfd2[1], 1); // redirectam stdout din al doilea pipe
+                    // redirectam stdin din primul pipe
+                    if(dup2(pfd1[0], 0) == -1) {
+                        perror("eroare la redirectare stdin");
+                        exit(-1);
+                    }
+                    // redirectam stdout din al doilea pipe
+                    if(dup2(pfd2[1], 1) == -1) {
+                        perror("eroare la redirectare stdout");
+                        exit(-1);
+                    }
                     
                     // salveaza in file_content ce avem in pipe
                     execlp("/home/adrian/Desktop/SO/Proiect_SO/s9/bash.sh", "/home/adrian/Desktop/SO/Proiect_SO/s9/bash.sh", argv[3], NULL);
@@ -241,7 +249,10 @@ int main(int argc, char** argv) {
 
                 // citeste intrarea din pipe
                 char out[1024];
-                read(pfd2[0], out, 1024);
+                if(read(pfd2[0], out, 1024) == -1) {
+                    perror("eroare la citire");
+                    exit(-1);
+                }
                 int count;                      
                 sscanf( out, "%d", &count);
                 //printf("count = %d", count);

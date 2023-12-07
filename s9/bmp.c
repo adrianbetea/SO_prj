@@ -8,20 +8,38 @@ int write_bmp(int fd_input, char* outputFileName, struct stat fileStat, char* nu
     int fd_output = get_output_file(outputFileName);
 
     int width, height;
-    read(fd_input, unused_buffer, 18);
+    if(read(fd_input, unused_buffer, 18) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
 
     sprintf(out, "nume fisier: %s\n", nume);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
-    read(fd_input, &width, 4);
+    if(read(fd_input, &width, 4) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
     sprintf(out, "width: %d\n", width);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
-    read(fd_input, &height, 4);
+    if(read(fd_input, &height, 4) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
     sprintf(out, "height: %d\n", height);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     //folosim file stat pentru a gasi informatii despre fisier
@@ -32,22 +50,34 @@ int write_bmp(int fd_input, char* outputFileName, struct stat fileStat, char* nu
 
     // DIMENSIUNEA FISIERULUI
     sprintf(out, "size: %ld\n", fileStat.st_size);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // USER ID
     sprintf(out, "user_id: %d\n", fileStat.st_uid);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // NUMARUL DE LEGATURI
     sprintf(out, "nr legaturi: %ld\n", fileStat.st_nlink);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // DATA ULTIMEI MODIFICARI
     sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
 
@@ -81,10 +111,22 @@ void convert_bmp(struct dirent *entryArray) {
 
     // citim urmatorii 54 de bytes din fisierul bmp
     // ca sa ajungem in zona culorilor 
-    read(fd_input, unused_buffer_1, 18);
-    read(fd_input, &width, 4);
-    read(fd_input, &height, 4);
-    read(fd_input, unused_buffer_2, 28);
+    if(read(fd_input, unused_buffer_1, 18) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
+    if(read(fd_input, &width, 4) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
+    if(read(fd_input, &height, 4) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
+    if(read(fd_input, unused_buffer_2, 28) == -1) {
+        perror("eroare la citire");
+        exit(-1);
+    }
 
     
 
@@ -93,12 +135,18 @@ void convert_bmp(struct dirent *entryArray) {
     long int pixelCount = width * height;
 
     for(long int i = 0; i < pixelCount; i++) {
-        read(fd_input, px, 3);
+        if(read(fd_input, px, 3) == -1) {
+            perror("eroare la citire");
+            exit(-1);
+        }
 
         unsigned char gray = 0.299 * px[2] + 0.587 * px[1] + 0.114 * px[0]; 
         memset(px, gray, sizeof(px));
         
-        write(fd_input, px, 3);
+        if(write(fd_input, px, 3) == -1) {
+            perror("eroare la scriere");
+            exit(-1);
+        }
 
     }
 
