@@ -1,10 +1,10 @@
 nume fisier: imagine_3.bmp
 width: 256
 height: 256
-size: 390327
+size: 392904
 user_id: 1000
 nr legaturi: 1
-Last modified time: Mon Nov 27 09:14:57 2023
+Last modified time: Thu Dec  7 18:33:53 2023
 Drepturi de acces user:RW-
 Drepturi de acces grup: RW-
 Drepturi de acces altii: R--

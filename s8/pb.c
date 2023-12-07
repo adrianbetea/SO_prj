@@ -29,7 +29,7 @@ int nr_scrieri_array[MAX_P];
 int main(int argc, char** argv) {
 
     if(argc != 3) {
-        perror("usage ./program <director_intrare> <director_iesire>");
+        printf("usage ./program <director_intrare> <director_iesire>\n");
         exit(-1);
     }
 
@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
     int fd_input;
 
     // deschidem directorul dat ca parametru
+    // verificam apelul sistem opendir
     if((input_dir=opendir(argv[1])) == NULL) {
         perror("folderul input nu s-a putut deschide!");
         exit(-1);

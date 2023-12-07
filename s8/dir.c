@@ -8,17 +8,25 @@ int write_dir(char* outputFileName, struct stat dirStat, char* nume, char* input
     int fd_output = get_output_file(outputFileName);
 
     sprintf(out, "nume director: %s\n", nume);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
+    // dupa ce scrie se incriementeaza nr_scrieri
     nr_scrieri++;
 
 
     // USER ID
     sprintf(out, "user_id: %d\n", dirStat.st_uid);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // functie pentru scrierea permisiunilor
     write_permissions(fd_output, dirStat); 
+    // dupa write permissions nr_scrieri creste cu 3, useri, grup, altii
     nr_scrieri+=3;
 
 

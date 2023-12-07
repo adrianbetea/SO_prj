@@ -34,44 +34,80 @@ void write_permissions(int fd_output, struct stat fileStat) {
 
     // drepturi pentru user
     sprintf(out, "Drepturi de acces user:");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
 
     // drepturi pentru grup
     sprintf(out, "Drepturi de acces grup: ");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
 
     // drepturi pentru altii
     sprintf(out, "Drepturi de acces altii: ");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
     sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n\n" : "-\n\n");
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
 
 }
 

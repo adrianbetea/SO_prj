@@ -10,7 +10,10 @@ int write_file(int fd_input, char* outputFileName, struct stat fileStat, char* n
     
 
     sprintf(out, "nume fisier: %s\n", nume);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     //folosim file stat pentru a gasi informatii despre fisier
@@ -21,22 +24,34 @@ int write_file(int fd_input, char* outputFileName, struct stat fileStat, char* n
 
     // DIMENSIUNEA FISIERULUI
     sprintf(out, "size: %ld\n", fileStat.st_size);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // USER ID
     sprintf(out, "user_id: %d\n", fileStat.st_uid);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // NUMARUL DE LEGATURI
     sprintf(out, "nr legaturi: %ld\n", fileStat.st_nlink);
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // DATA ULTIMEI MODIFICARI
     sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
-    write(fd_output, out, strlen(out));
+    if(write(fd_output, out, strlen(out)) == -1) {
+        perror("eroare la scriere");
+        exit(-1);
+    }
     nr_scrieri++;
 
     // functie pentru scrierea permisiunilor
@@ -65,9 +80,9 @@ int file_process(int fd_input, struct dirent *entryArray, struct stat entryStat,
         printf("detaliile fisierului %s au fost scrise in %s!\n", entryArray->d_name, out_name);
         if(close(fd_input) == -1) {
             perror("fisierul nu s-a putut inchide!");
+            exit(-1);
         } else {
         printf("fisierul %s s-a inchis cu succes!\n\n", entryArray->d_name);
-        
         }
     } 
     return nr_scrieri;

@@ -1,10 +1,10 @@
 nume fisier: imagine_1.bmp
 width: 467
 height: 467
-size: 1291632
+size: 1306470
 user_id: 1000
 nr legaturi: 1
-Last modified time: Mon Nov 27 09:14:58 2023
+Last modified time: Thu Dec  7 18:33:53 2023
 Drepturi de acces user:RW-
 Drepturi de acces grup: RW-
 Drepturi de acces altii: R--
