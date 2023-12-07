@@ -36,83 +36,133 @@ void scriere_fisier(int fd_input, int fd_output, struct stat fileStat) {
 
   // DIMENSIUNEA FISIERULUI
   sprintf(out, "size: %ld\n", fileStat.st_size);
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   // USER ID
   sprintf(out, "user_id: %d\n", fileStat.st_uid);
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   // NUMARUL DE LEGATURI
   sprintf(out, "nr legaturi: %ld\n", fileStat.st_nlink);
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   // DATA ULTIMEI MODIFICARI
   sprintf(out, "Last modified time: %s", ctime(&fileStat.st_mtime));
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   // DREPTURI DE ACCES
 
   // drepturi pentru user
   sprintf(out, "Drepturi de acces user:");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IRUSR) ? "R" : "-");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IWUSR) ? "W" : "-");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IXUSR) ? "X\n" : "-\n");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
 
   // drepturi pentru grup
   sprintf(out, "Drepturi de acces grup: ");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IRGRP) ? "R" : "-");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IWGRP) ? "W" : "-");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IXGRP) ? "X\n" : "-\n");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
 
   // drepturi pentru altii
   sprintf(out, "Drepturi de acces altii: ");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IROTH) ? "R" : "-");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IWOTH) ? "W" : "-");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, (fileStat.st_mode & S_IXOTH) ? "X\n" : "-\n");
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
 }
 
 int main(int argc, char** argv) {
 
   if(argc != 2) {
-    perror("usage ./program <fisier_intrare>");
+    printf("Eroare: usage ./program <fisier_intrare>");
     exit(-1);
   } else  {
     // verificam extensia fisierului 
     if(strcmp(FileSuffix(argv[1]), ".bmp") !=0) {
-	perror("fisierul de intrare nu are extensia buna");
-	exit(-1);
-      }
+	    printf("Eroare: fisierul de intrare nu are extensia buna");
+	    exit(-1);
+    }
   }
 
   int fd_input, fd_output;
-  // fisierul input este numai pentru citire  fd_input = open(argv[1], O_RDONLY); 
+  // fisierul input este numai pentru citire fd_input = open(argv[1], O_RDONLY); 
+  // apel sistem pentru deschdere fisier
   fd_input = open(argv[1], O_RDONLY);
 
   if(fd_input == -1) {
+    // perror se foloseste la apeluri sistem!
     perror("fisierul nu s-a putut deschide");
     exit(-1);
   }
@@ -123,38 +173,60 @@ int main(int argc, char** argv) {
   char fout[]="statistica.txt";
   fd_output = open(fout, O_RDWR);
   if(fd_output==-1) {
-    printf("fisierul %s nu exista\nvom crea fisierul\n", fout);
+    
+    printf("fisierul %s nu exista\nvom crea fisierul\n", fout); 
+    //creat - apel sistem pentru crearea unui fisier
     fd_output = creat(fout, S_IRUSR | S_IWUSR | S_IXUSR);
     if(fd_output ==-1) {
       perror("fisierul nu s-a putut crea");
       exit(-1);
     }
     else {
-  printf("fisierul %s a fost creat cu succes!\n", fout);
+      printf("fisierul %s a fost creat cu succes!\n", fout);
     }
-  }
-  else {
-    printf("fisierul %s s-a deschis cu succes!\n", fout);
-  }
+    } 
+    else {
+      printf("fisierul %s s-a deschis cu succes!\n", fout);
+    }
 
   
   char unused_buffer[1024];
   char out[1024];
   int width, height;
-  read(fd_input, unused_buffer, 18);
+  // apel sistem pentru citirea din fisier
+  if(read(fd_input, unused_buffer, 18) == -1) {
+    perror("eroare la citire");
+    exit(-1);
+  }
   
   
-  read(fd_input, &width, 4);
+  if(read(fd_input, &width, 4) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   sprintf(out, "pentru fisierul %s\n\n", argv[1]);
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
   
   sprintf(out, "width: %d\n", width);
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
   
-  read(fd_input, &height, 4);
+  if(read(fd_input, &height, 4) == -1) {
+    perror("eroare la citire");
+    exit(-1);
+  }
+
   sprintf(out, "height: %d\n", height);
-  write(fd_output, out, strlen(out));
+  if(write(fd_output, out, strlen(out)) == -1) {
+    perror("eroare la scriere");
+    exit(-1);
+  }
 
   struct stat fileStat;
 
@@ -162,6 +234,8 @@ int main(int argc, char** argv) {
 
   if(close(fd_input) == -1) {
     printf("fisierul %s nu s-a putut inchide\n", argv[1]);
+    perror("eroare la inchidere fisier");
+    exit(-1);
   }
   else {
     printf("fisierul %s s-a inchis cu succes\n", argv[1]);
@@ -170,6 +244,8 @@ int main(int argc, char** argv) {
   
   if(close(fd_output) == -1) {
     printf("fisierul %s nu s-a putut inchide\n", fout);
+    perror("eroare la inchidere fisier");
+    exit(-1);
   }
   else {    
     printf("fisierul %s s-a inchis cu succes!!!!\n", fout);
